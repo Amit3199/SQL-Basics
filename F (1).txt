@@ -1,0 +1,244 @@
+1. Create a table called employees with the following structure
+ emp_id (integer, should not be NULL and should be a primary key)
+ emp_name (text, should not be NULL)
+ age (integer, should have a check constraint to ensure the age is at least 18)
+ email (text, should be unique for each employee)
+ salary (decimal, with a default value of 30,000).
+ Write the SQL query to create the above table with all constraints.
+
+Ans: CREATE TABLE employees (
+    emp_id INT NOT NULL PRIMARY KEY,
+    emp_name TEXT NOT NULL,
+    age INT CHECK (age >= 18),
+    email TEXT UNIQUE,
+    salary DECIMAL(10,2) DEFAULT 30000
+);
+
+2. Explain the purpose of constraints and how they help maintain data integrity in a database. Provide 
+examples of common types of constraints.
+
+Ans: Constraints enforce rules on data to maintain integrity.
+
+PRIMARY KEY → Ensures unique identification of rows.
+
+FOREIGN KEY → Maintains referential integrity.
+
+NOT NULL → Prevents missing values.
+
+UNIQUE → Prevents duplicate entries.
+
+CHECK → Validates conditions on column values.
+
+DEFAULT → Assigns automatic value if none provided.
+
+Query: dept_id INT REFERENCES departments(dept_id)
+
+3.Why would you apply the NOT NULL constraint to a column? Can a primary key contain NULL values? Justify 
+your answer.
+
+Ans: NOT NULL ensures mandatory data entry.
+
+Primary Key automatically implies NOT NULL + UNIQUE, which guarantees that every row can be uniquely and validly identified.
+
+Query: emp_id INT PRIMARY KEY
+
+ 4. Explain the steps and SQL commands used to add or remove constraints on an existing table. Provide an 
+example for both adding and removing a constraint.
+
+Ans: Add constraint
+
+Query: ALTER TABLE employees 
+ADD CONSTRAINT chk_salary CHECK (salary > 0);
+
+Remove constraint
+
+Query: ALTER TABLE employees 
+DROP CONSTRAINT chk_salary;
+
+
+5. Explain the consequences of attempting to insert, update, or delete data in a way that violates constraints. 
+Provide an example of an error message that might occur when violating a constraint.
+
+Ans: INSERT INTO employees (emp_id, emp_name, age, email) 
+VALUES (1, 'John', 15, 'john@email.com');
+
+
+6. You created a products table without constraints as follows:
+ CREATE TABLE products (
+ product_id INT,
+ product_name VARCHAR(50),
+ price DECIMAL(10, 2));
+ Now, you realise that
+ The product_id should be a primary key
+ The price should have a default value of 50.00
+
+
+Ans: ALTER TABLE products
+ADD CONSTRAINT pk_product PRIMARY KEY (product_id);
+
+ALTER TABLE products
+ALTER COLUMN price SET DEFAULT 50.00;
+
+7. Ans:  SELECT s.student_name, c.class_name
+FROM Students s
+INNER JOIN Classes c
+ON s.class_id = c.class_id;
+
+| student_name | class_name |
+| ------------ | ---------- |
+| Alice        | Math       |
+| Bob          | Science    |
+| Charlie      | Math       |
+
+
+8. Ans: SELECT 
+    o.order_id,
+    c.customer_name,
+    p.product_name
+FROM Products p
+LEFT JOIN Orders o 
+    ON p.order_id = o.order_id
+LEFT JOIN Customers c
+    ON o.customer_id = c.customer_id;
+
+9. Ans: SELECT 
+    p.product_name,
+    SUM(s.amount) AS total_sales_amount
+FROM Sales s
+INNER JOIN Product p ON s.product_id = p.product_id
+GROUP BY p.product_name;
+
+10. Ans:  SELECT 
+    o.order_id,
+    c.customer_name,
+    od.quantity
+FROM Orders o
+INNER JOIN Customers c ON o.customer_id = c.customer_id
+INNER JOIN Order_Details od ON o.order_id = od.order_id;
+
+
+SQL COMMANDS
+
+
+1-Identify the primary keys and foreign keys in maven movies db. Discuss the differences.
+
+Ans:  Aspect     | Primary Key                                               |        Foreign Key                                                                |
+| -------------- | --------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Definition     | A unique identifier for each record in a table.           | A column that creates a link to a primary key in another table.                   |
+| Uniqueness     | Must be **unique** and **NOT NULL**.                      | Can contain **duplicate values** and may allow NULLs.                             |
+| Role           | Ensures each record is uniquely identifiable.             | Ensures referential integrity between related tables.                             |
+| Example        | `customer.customer_id` uniquely identifies each customer. | `rental.customer_id` refers to `customer.customer_id` (foreign key relationship). |
+
+
+ 2- List all details of actors.
+
+Ans:  SELECT * FROM actor;
+
+
+3 - List all customer information from DB.
+
+Ans:  SELECT * FROM customer;
+
+
+ 4 -List different countries
+
+Ans: SELECT DISTINCT country FROM country;
+
+
+ 5 - Display all active customers.
+
+Ans: SELECT * FROM customer WHERE active = 1;
+
+
+6 - List of all rental IDs for customer with ID 1.
+
+Ans: SELECT rental_id FROM rental WHERE customer_id = 1;
+
+
+ 7 - Display all the films whose rental duration is greater than 5.
+
+Ans: SELECT * FROM film WHERE rental_duration > 5;
+
+
+ 8 - List the total number of films whose replacement cost is greater than $15 and less than $20.
+
+Ans:  SELECT COUNT(*) AS total_films FROM film WHERE replacement_cost > 15 AND replacement_cost < 20;
+
+
+ 9 - Display the count of unique first names of actors.
+
+Ans: SELECT COUNT(DISTINCT first_name) AS unique_first_names FROM actor;
+
+
+10- Display the first 10 records from the customer table .
+
+Ans: SELECT * FROM customer LIMIT 10;
+
+
+ 11 - Display the first 3 records from the customer table whose first name starts with ‘b’.
+
+Ans:  SELECT * FROM customer WHERE first_name LIKE 'b%' LIMIT 3;
+
+
+12 -Display the names of the first 5 movies which are rated as ‘G’.
+
+Ans: SELECT title FROM film WHERE rating = 'G' LIMIT 5;
+
+
+13-Find all customers whose first name starts with "a".
+
+Ans:  SELECT * FROM customer WHERE first_name LIKE 'a%';
+
+
+14- Find all customers whose first name ends with "a".
+
+Ans:  SELECT * FROM customer WHERE first_name LIKE '%a';
+
+
+ 15- Display the list of first 4 cities which start and end with ‘a’ .
+
+Ans: SELECT city FROM city WHERE city LIKE 'a%a' LIMIT 4;
+
+
+ 16- Find all customers whose first name have "NI" in any position.
+
+Ans: SELECT * FROM customer WHERE first_name LIKE '%NI%';
+
+
+ 17- Find all customers whose first name have "r" in the second position .
+
+Ans: SELECT * FROM customer WHERE first_name LIKE '_r%';
+
+
+ 18 - Find all customers whose first name starts with "a" and are at least 5 characters in length.
+
+Ans: SELECT * FROM customer WHERE first_name LIKE 'a%' AND CHAR_LENGTH(first_name) >= 5;
+
+
+ 19- Find all customers whose first name starts with "a" and ends with "o".
+
+Ans: SELECT * FROM customer WHERE first_name LIKE 'a%o';
+
+
+20 - Get the films with pg and pg-13 rating using IN operator.
+
+Ans: SELECT * FROM film WHERE rating IN ('PG', 'PG-13');
+
+
+21 - Get the films with length between 50 to 100 using between operator.
+
+Ans: SELECT * FROM film WHERE length BETWEEN 50 AND 100;
+
+
+ 22 - Get the top 50 actors using limit operator.
+
+Ans: SELECT * FROM actor LIMIT 50;
+
+
+23 - Get the distinct film ids from inventory table.
+
+Ans: SELECT DISTINCT film_id FROM inventory;
+
+
+Functions:
+
